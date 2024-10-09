@@ -1,0 +1,39 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Configurações do LCD (endereço, largura, altura)
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// Definições dos pinos
+const int sensorPin = A0; // Pino onde o divisor de tensão está conectado
+
+// Tensão de alimentação em volts
+const float voltageSupply = 5.0; 
+
+void setup() {
+  lcd.init(); // Inicializa o LCD
+  lcd.backlight();
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Leitura do sensor
+  int sensorValue = analogRead(sensorPin);
+  
+  // Convertendo o valor lido para tensão
+  float voltage = (sensorValue * voltageSupply) / 1023.0; // Tensão do Arduino
+
+  // Exibir no LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Voltagem: ");
+  lcd.print(voltage, 2); // Exibe a tensão lida
+  lcd.print(" V");
+  
+  // Exibir no Serial Monitor (opcional)
+  Serial.print("Voltagem medida: ");
+  Serial.print(voltage, 2);
+  Serial.println(" V");
+  
+  delay(1000); // Espera 1 segundo
+}
